@@ -9,3 +9,8 @@ const gridCellSize = 20;
 
 const gridSizeX = math.floor(canvas.width / gridCellSize);
 const gridSizeY = math.floor(canvas.height / gridCellSize);
+
+const snake = {
+    body: [{x: 5, y: 5}],
+    direction: {x: 1, y: 0},
+};
