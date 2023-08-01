@@ -22,4 +22,15 @@ setInterval(gameLoop, gameLoopInterval);
 
 function gameLoop() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
+            snake.direction = {x: 0, y: -1};
+        } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
+            snake.direction = {x: 0, y: 1};
+        } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
+            snake.direction = {x: 1, y: 0};
+        } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
+            snake.direction = {x: -1, y: 0};
+        }
+    });
 }
