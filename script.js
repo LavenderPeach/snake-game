@@ -14,3 +14,12 @@ const snake = {
     body: [{x: 5, y: 5}],
     direction: {x: 1, y: 0},
 };
+
+// Loop interval (ms)
+const gameLoopInterval = 100;
+
+setInterval(gameLoop, gameLoopInterval);
+
+function gameLoop() {
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+}
