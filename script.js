@@ -1,12 +1,16 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restart = document.getElementById('restart-btn');
-// Size of each grid cell
+const headX = snake.body[0].x;
+const headY = snake.body[0].y;
+const hitBoundaryX = headX < 0 || headX >= gridSizeX;
+const hitBoundaryY = headY < 0 || headY >= gridSizeY;
+const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
 
+// Size of each grid cell
 const gridCellSize = 20;
 
 // Calc # of cells
-
 const gridSizeX = math.floor(canvas.width / gridCellSize);
 const gridSizeY = math.floor(canvas.height / gridCellSize);
 
@@ -15,6 +19,14 @@ const snake = {
     direction: {x: 1, y: 0},
 };
 
+function resetGame() {
+    snake.body = [{x: 5, y: 5}];
+    snake.direction = {x:1, y:0};
+    hasEatenFood = false;
+    score = 0;
+    food = generateRandomFoodPosition();
+    gameLoopId = setInterval(gameLoop, gameLoopInterval);
+}
 // Generate random food position.
 function generateRandomFoodPosition() {
     const x = Math.floor(Math.random() * gridSizeX);
@@ -57,7 +69,7 @@ gameLoopId = setInterval(gameLoop, gameLoopInterval);
 
 // INSIDE GAME LOOP
 function gameLoop() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+   
 
     const head = { ...snake.body[0]};
     head.x += snake.direction.x;
@@ -70,22 +82,24 @@ function gameLoop() {
         hasEatenFood = false;
     }
 
+    // update game if snake eats food
     if (head.x === food.x && head.y === food.y) {
         hasEatenFood = true;
+        score++; // Increase score after snake eats
+        updateScoreboard(); // update scoreboard
         food = generateRandomFoodPosition();
     }
 
-    const headX = snake.body[0].x;
-    const headY = snake.body[0].y;
-    const hitBoundaryX = headX < 0 || headX >= gridSizeX;
-    const hitBoundaryY = headY < 0 || headY >= gridSizeY;
-    const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
-
+    // check if game over condition is met
     if (hitBoundaryX || hitBoundaryY || suicide) {
         clearInterval(gameLoopId);
         handleGameOver();
         return;
     }
+
+    // clear canvas
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+
     // draw snake + food on canvas
     drawFood();
     drawSnake();
