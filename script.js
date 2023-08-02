@@ -86,8 +86,11 @@ function gameLoop() {
         handleGameOver();
         return;
     }
-
+    // draw snake + food on canvas
     drawFood();
+    drawSnake();
+
+    // repeat loop
+    requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(gameLoop);
