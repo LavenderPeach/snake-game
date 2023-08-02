@@ -1,6 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
+const restart = document.getElementById('.restart-btn');
 // Size of each grid cell
 
 const gridCellSize = 20;
@@ -18,21 +18,22 @@ const snake = {
 // Loop interval (ms)
 const gameLoopInterval = 100;
 let gameLoopId;
+restart-btn.addEventListener ('click', () => {
 
  // respond to user input
-function handleKeyPress(event){
-    if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
-        snake.direction = {x: 0, y: -1};
-    } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
-        snake.direction = {x: 0, y: 1};
-    } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
-        snake.direction = {x: 1, y: 0};
-    } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
+    function handleKeyPress(event){
+        if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
+            snake.direction = {x: 0, y: -1};
+        } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
+             snake.direction = {x: 0, y: 1};
+        } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
+             snake.direction = {x: 1, y: 0};
+        } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
            snake.direction = {x: -1, y: 0};
     }
 }
 document.addEventListener('keydown', handleKeyPress);
-
+})
 function handleGameOver() {
     alert('You are so bad. Like... bad. You score ' + (snake.body.length - 1) + ' points. Think you can do any better?');
     document.removeEventListener('keydown', handleKeyPress);
