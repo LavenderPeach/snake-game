@@ -41,6 +41,14 @@ function drawFood() {
     ctx.fillStyle = 'red';
     ctx.fillRect(food.x * gridCellSize, food.y * gridCellSize, gridCellSize, gridCellSize);
 }
+
+// draw snake on canvas
+function drawSnake() {
+    ctx.fillStyle = 'green';
+    snake.body.forEach((segment) => {
+        ctx.fillRect(segment.x * gridCellSize, segment.y * gridCellSize, gridCellSize, gridCellSize);
+    });
+}
 // Loop interval (ms)
 const gameLoopInterval = 100;
 let gameLoopId;
