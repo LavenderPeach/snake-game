@@ -52,3 +52,13 @@ function gameLoop() {
         hasEatenFood = true;
         food = generateRandomFoodPosition();
     }
+
+    const headX = snake.body[0].x;
+    const headY = snake.body[0].y;
+    const hitBoundaryX = headX < 0 || headX >= gridSizeX;
+    const hitBoundaryY = headY < 0 || headY >= gridSizeY;
+    const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
+
+    if (hitBoundaryX || hitBoundaryY || suicide) {
+        return; 
+    }
