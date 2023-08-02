@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
     <title>Snake</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <script src="script.js"></script>
-    <button class="restart-btn">Restart</button>
+    <div class="game-container">
+        <h1>Snake</h1>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div id="scoreboard">Score: 0</div>
+        <button id="restart-btn">Restart</button>
+    </div>
 </body>
 </html>
