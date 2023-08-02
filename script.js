@@ -22,6 +22,8 @@ setInterval(gameLoop, gameLoopInterval);
 
 function gameLoop() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
+
+    // respond to user input
     document.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
             snake.direction = {x: 0, y: -1};
@@ -34,3 +36,14 @@ function gameLoop() {
         }
     });
 }
+
+    const head = { ...snake.body[0]};
+    head.x += snake.direction.x;
+    head.y += snake.direction.y;
+    snake.body.unshift(head);
+
+    if(!hasEatenFood) {
+        snake.body.pop();
+    } else {
+        hasEatenFood = false;
+    }
