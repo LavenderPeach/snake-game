@@ -19,28 +19,29 @@ const snake = {
 const gameLoopInterval = 100;
 let gameLoopId;
 
-function handleGameOver () {
+ // respond to user input
+function handleKeyPress(event){
+    if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
+        snake.direction = {x: 0, y: -1};
+    } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
+        snake.direction = {x: 0, y: 1};
+    } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
+        snake.direction = {x: 1, y: 0};
+    } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
+           snake.direction = {x: -1, y: 0};
+    }
+}
+document.addEventListener('keydown', handleKeyPress);
+
+function handleGameOver() {
     alert('You are so bad. Like... bad. You score ' + (snake.body.length - 1) + ' points. Think you can do any better?');
+    document.removeEventListener('keydown', handleKeyPress);
 }
 
 gameLoopId = setInterval(gameLoop, gameLoopInterval);
 
 function gameLoop() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
-
-    // respond to user input
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
-            snake.direction = {x: 0, y: -1};
-        } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
-            snake.direction = {x: 0, y: 1};
-        } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
-            snake.direction = {x: 1, y: 0};
-        } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
-            snake.direction = {x: -1, y: 0};
-        }
-    });
-}
 
     const head = { ...snake.body[0]};
     head.x += snake.direction.x;
@@ -69,3 +70,4 @@ function gameLoop() {
         handleGameOver();
         return;
     }
+}
