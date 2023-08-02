@@ -1,6 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const restart = document.getElementById('.restart-btn');
+const restart = document.getElementById('restart-btn');
 // Size of each grid cell
 
 const gridCellSize = 20;
@@ -15,6 +15,20 @@ const snake = {
     direction: {x: 1, y: 0},
 };
 
+// Generate random food position.
+function generateRandomFoodPosition() {
+    const x = Math.floor(Math.random() * gridSizeX);
+    const y = Math.floor(Math.random() * gridSizeY);
+    return {x, y};
+}
+// Food position
+let food = generateRandomFoodPosition();
+
+// Draw food on Canvas
+function drawFood() {
+    ctx.fillStyle = 'red';
+    ctx.fillRect(food.x * gridCellSize, food.y * gridCellSize, gridCellSize, gridCellSize);
+}
 // Loop interval (ms)
 const gameLoopInterval = 100;
 let gameLoopId;
@@ -41,6 +55,7 @@ function handleGameOver() {
 
 gameLoopId = setInterval(gameLoop, gameLoopInterval);
 
+// INSIDE GAME LOOP
 function gameLoop() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
 
@@ -71,4 +86,8 @@ function gameLoop() {
         handleGameOver();
         return;
     }
+
+    drawFood();
 }
+
+requestAnimationFrame(gameLoop);
