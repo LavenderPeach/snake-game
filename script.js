@@ -17,8 +17,13 @@ const snake = {
 
 // Loop interval (ms)
 const gameLoopInterval = 100;
+let gameLoopId;
 
-setInterval(gameLoop, gameLoopInterval);
+function handleGameOver () {
+    alert('You are so bad. Like... bad. You score ' + (snake.body.length - 1) + ' points. Think you can do any better?');
+}
+
+gameLoopId = setInterval(gameLoop, gameLoopInterval);
 
 function gameLoop() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
@@ -60,5 +65,7 @@ function gameLoop() {
     const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
 
     if (hitBoundaryX || hitBoundaryY || suicide) {
-        return; 
+        clearInterval(gameLoopId);
+        handleGameOver();
+        return;
     }
