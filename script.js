@@ -47,3 +47,8 @@ function gameLoop() {
     } else {
         hasEatenFood = false;
     }
+
+    if (head.x === food.x && head.y === food.y) {
+        hasEatenFood = true;
+        food = generateRandomFoodPosition();
+    }
