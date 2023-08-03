@@ -14,11 +14,17 @@ const gridCellSize = 20;
 const gridSizeX = math.floor(canvas.width / gridCellSize);
 const gridSizeY = math.floor(canvas.height / gridCellSize);
 
+// the snake
 const snake = {
     body: [{x: 5, y: 5}],
     direction: {x: 1, y: 0},
 };
 
+// game variables
+let hasEatenFood = false;
+let score = 0;
+
+// function to reset game upon defeat
 function resetGame() {
     snake.body = [{x: 5, y: 5}];
     snake.direction = {x:1, y:0};
@@ -27,12 +33,19 @@ function resetGame() {
     food = generateRandomFoodPosition();
     gameLoopId = setInterval(gameLoop, gameLoopInterval);
 }
-// Generate random food position.
+// Generate random food position
 function generateRandomFoodPosition() {
     const x = Math.floor(Math.random() * gridSizeX);
     const y = Math.floor(Math.random() * gridSizeY);
     return {x, y};
 }
+
+// scoreboard update
+function updateScoreboard() {
+    const scoreboardElement = document.getElementById('scoreboard');
+    scoreboardElement.textContent = 'Score: ' + score;
+}
+
 // Food position
 let food = generateRandomFoodPosition();
 
@@ -68,6 +81,8 @@ restart-btn.addEventListener ('click', () => {
 }
 document.addEventListener('keydown', handleKeyPress);
 })
+
+// Game over function
 function handleGameOver() {
     alert('You are so bad. Like... bad. You score ' + (snake.body.length - 1) + ' points. Think you can do any better?');
     document.removeEventListener('keydown', handleKeyPress);
