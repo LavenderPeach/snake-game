@@ -1,7 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restart = document.getElementById('restart-btn');
-
+let gameStarted = false
 
 // Size of each grid cell
 const gridCellSize = 20;
@@ -13,7 +13,7 @@ const gridSizeY = Math.floor(canvas.height / gridCellSize);
 // the snake
 const snake = {
     body: [{x: 5, y: 5}],
-    direction: null,
+    direction: {x: 0, y: 0},
 };
 
 // Food position
@@ -26,7 +26,7 @@ let score = 0;
 // function to reset game upon defeat
 function resetGame() {
     snake.body = [{x: 5, y: 5}];
-    snake.direction = {x:1, y:0};
+    snake.direction = {x: 0, y:0};
     hasEatenFood = false;
     score = 0;
     food = generateRandomFoodPosition();
@@ -38,6 +38,27 @@ function generateRandomFoodPosition() {
     const x = Math.floor(Math.random() * gridSizeX);
     const y = Math.floor(Math.random() * gridSizeY);
     return {x, y};
+}
+
+function drawGridLines() {
+    ctx.strokeStyle = 'gray';
+    ctx.lineWidth = 1;
+
+    // Draw vertical lines
+    for (let x = 0; x <= canvas.width; x += gridCellSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+
+    // Draw horizontal lines
+    for (let y = 0; y <= canvas.height; y += gridCellSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
 }
 
 // scoreboard update
@@ -73,6 +94,11 @@ function handleKeyPress(event){
         gameLoopId = setInterval(gameLoop, gameLoopInterval);
     }
 
+    if (!gameStarted) {
+        gameLoopId = setInterval(gameLoop, gameLoopInterval);
+        gameStarted = true
+    }
+
     if (event.key === 'ArrowUp' && snake.direction.y !== 1) {
         snake.direction = {x: 0, y: -1};
     } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
@@ -90,14 +116,21 @@ document.addEventListener('keydown', handleKeyPress);
 function handleGameOver() {
     alert('You are bad. Like... so bad. You scored ' + (snake.body.length - 1) + ' points. Think you can do any better?');
     document.removeEventListener('keydown', handleKeyPress);
-    resetGame();
+    gameStarted = false;
+    clearInterval(gameLoopId);
 }
 
 gameLoopId = setInterval(gameLoop, gameLoopInterval);
 
 // INSIDE GAME LOOP
 function gameLoop() {
-   
+
+    // define head of snake and death when snake hits a boundary
+    const headX = snake.body[0].x;
+    const headY = snake.body[0].y;
+    const hitBoundaryX = headX < 0 || headX >= gridSizeX;
+    const hitBoundaryY = headY < 0 || headY >= gridSizeY;
+    const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
  if (snake.direction !== null) {
     const head = { ...snake.body[0]};
     head.x += snake.direction.x;
@@ -118,13 +151,6 @@ function gameLoop() {
         food = generateRandomFoodPosition();
     }
 
-    // define head of snake and death when snake hits a boundary
-    const headX = snake.body[0].x;
-    const headY = snake.body[0].y;
-    const hitBoundaryX = headX < 0 || headX >= gridSizeX;
-    const hitBoundaryY = headY < 0 || headY >= gridSizeY;
-    const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
-
     // check if game over condition is met
     if (hitBoundaryX || hitBoundaryY || suicide) {
         clearInterval(gameLoopId);
@@ -138,7 +164,7 @@ function gameLoop() {
     // draw snake + food on canvas
     drawFood();
     drawSnake();
-
+    drawGridLines();
     // repeat loop
     requestAnimationFrame(gameLoop);
 }
