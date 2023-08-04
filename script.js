@@ -31,13 +31,19 @@ function resetGame() {
     hasEatenFood = false;
     score = 0;
     food = generateRandomFoodPosition();
-    document.addEventListener('keydown', handleKeyPress);
+    clearInterval(gameLoopId);
+    document.removeEventListener('keydown', handleKeyPress);
     gameLoopId = setInterval(gameLoop, fixedSpeed);
+    document.addEventListener('keydown', handleKeyPress);
 }
+
 // Generate random food position
 function generateRandomFoodPosition() {
-    const x = Math.floor(Math.random() * gridSizeX);
-    const y = Math.floor(Math.random() * gridSizeY);
+    let x, y;
+    do {
+        x = Math.floor(Math.random() * gridSizeX);
+        y = Math.floor(Math.random() * gridSizeY);
+}   while (snake.body.some(segment => segment.x === x && segment.y === y));
     return {x, y};
 }
 
@@ -116,7 +122,7 @@ function gameLoop() {
        const headX = snake.body[0].x;
        const headY = snake.body[0].y;
        const hitBoundaryX = headX < 0 || headX >= gridSizeX;
-       const hitBoundaryY = headY < 0 || headY >= gridSizeY;
+       const hitBoundaryY = headY < 0 || headY >= gridSizeY; 
        const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
     
        if (snake.direction !== null) {
