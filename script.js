@@ -23,7 +23,9 @@ let food = generateRandomFoodPosition();
 // game variables
 let hasEatenFood = false;
 let score = 0;
-
+function updateScoreboard() {
+    let score = 0;
+}
 // function to reset game upon defeat
 function resetGame() {
     snake.body = [{x: 5, y: 5}];
@@ -35,6 +37,7 @@ function resetGame() {
     document.removeEventListener('keydown', handleKeyPress);
     gameLoopId = setInterval(gameLoop, fixedSpeed);
     document.addEventListener('keydown', handleKeyPress);
+    updateScoreboard();
 }
 
 // Generate random food position
