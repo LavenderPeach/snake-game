@@ -82,7 +82,7 @@ function drawSnake() {
     });
 }
 // Loop interval (ms)
-const snakeSpeed = 2;
+const snakeSpeed = 6;
 const fixedSpeed = 1 / snakeSpeed * 1000;
 let lastMoveTime = Date.now();
 let gameLoopId;
