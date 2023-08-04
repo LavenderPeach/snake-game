@@ -41,27 +41,6 @@ function generateRandomFoodPosition() {
     return {x, y};
 }
 
-function drawGridLines() {
-    ctx.strokeStyle = 'gray';
-    ctx.lineWidth = 1;
-
-    // Draw vertical lines
-    for (let x = 0; x <= canvas.width; x += gridCellSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-    }
-
-    // Draw horizontal lines
-    for (let y = 0; y <= canvas.height; y += gridCellSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-    }
-}
-
 // scoreboard update
 function updateScoreboard() {
     const scoreboardElement = document.getElementById('scoreboard');
@@ -175,7 +154,6 @@ function gameLoop() {
     // draw snake + food on canvas
     drawFood();
     drawSnake();
-    drawGridLines();
     // repeat loop
     requestAnimationFrame(gameLoop);
 }
