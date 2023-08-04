@@ -2,8 +2,9 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restart = document.getElementById('restart-btn');
 let gameStarted = false
+let gameOverAlertShown = false
 
-// Size of each grid cell
+// Size of each grid cell 
 const gridCellSize = 20;
 
 // Calc # of cells
@@ -30,7 +31,7 @@ function resetGame() {
     hasEatenFood = false;
     score = 0;
     food = generateRandomFoodPosition();
-    clearInterval(gameLoopId);
+    document.addEventListener('keydown', handleKeyPress);
     gameLoopId = setInterval(gameLoop, gameLoopInterval);
 }
 // Generate random food position
@@ -104,20 +105,20 @@ function handleKeyPress(event){
     } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
          snake.direction = {x: 0, y: 1};
     } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
-         snake.direction = {x: 1, y: 0};
+         snake.direction = {x: .001, y: 0};
     } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
        snake.direction = {x: -1, y: 0};
     }
  }
 document.addEventListener('keydown', handleKeyPress);
 
-
 // Game over function
 function handleGameOver() {
-    alert('You are bad. Like... so bad. You scored ' + (snake.body.length - 1) + ' points. Think you can do any better?');
+    if (!gameOverAlertShown) {
+        alert('You are bad. Like... so bad. You scored ' + (snake.body.length - 1) + ' points. Think you can do any better?');
+    }
     document.removeEventListener('keydown', handleKeyPress);
-    gameStarted = false;
-    clearInterval(gameLoopId);
+    resetGame();
 }
 
 gameLoopId = setInterval(gameLoop, gameLoopInterval);
@@ -158,6 +159,7 @@ function gameLoop() {
         return;
     }
  }
+ 
     // clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
 
