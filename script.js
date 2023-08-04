@@ -32,7 +32,7 @@ function resetGame() {
     score = 0;
     food = generateRandomFoodPosition();
     document.addEventListener('keydown', handleKeyPress);
-    gameLoopId = setInterval(gameLoop, gameLoopInterval);
+    gameLoopId = setInterval(gameLoop, fixedSpeed);
 }
 // Generate random food position
 function generateRandomFoodPosition() {
@@ -82,21 +82,23 @@ function drawSnake() {
     });
 }
 // Loop interval (ms)
-const gameLoopInterval = 100;
+const snakeSpeed = 2;
+const fixedSpeed = 1 / snakeSpeed * 1000;
+let lastMoveTime = Date.now();
 let gameLoopId;
 restart.addEventListener ('click', () => {
     resetGame();
-    gameLoopId = setInterval(gameLoop, gameLoopInterval);
+    gameLoopId = setInterval(gameLoop, fixedSpeed);
 });
 
  // respond to user input
 function handleKeyPress(event){
     if (snake.direction === null) {
-        gameLoopId = setInterval(gameLoop, gameLoopInterval);
+        gameLoopId = setInterval(gameLoop, fixedSpeed);
     }
 
     if (!gameStarted) {
-        gameLoopId = setInterval(gameLoop, gameLoopInterval);
+        gameLoopId = setInterval(gameLoop, fixedSpeed);
         gameStarted = true
     }
 
@@ -105,7 +107,7 @@ function handleKeyPress(event){
     } else if (event.key === 'ArrowDown' && snake.direction.y !== -1) {
          snake.direction = {x: 0, y: 1};
     } else if (event.key === 'ArrowRight' && snake.direction.x !== -1) {
-         snake.direction = {x: .001, y: 0};
+         snake.direction = {x: 1, y: 0};
     } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
        snake.direction = {x: -1, y: 0};
     }
@@ -121,44 +123,51 @@ function handleGameOver() {
     resetGame();
 }
 
-gameLoopId = setInterval(gameLoop, gameLoopInterval);
+gameLoopId = setInterval(gameLoop, fixedSpeed);
 
 // INSIDE GAME LOOP
 function gameLoop() {
 
-    // define head of snake and death when snake hits a boundary
-    const headX = snake.body[0].x;
-    const headY = snake.body[0].y;
-    const hitBoundaryX = headX < 0 || headX >= gridSizeX;
-    const hitBoundaryY = headY < 0 || headY >= gridSizeY;
-    const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
- if (snake.direction !== null) {
-    const head = { ...snake.body[0]};
-    head.x += snake.direction.x;
-    head.y += snake.direction.y;
-    snake.body.unshift(head);
-
-    if(!hasEatenFood) {
-        snake.body.pop();
-    } else {
-        hasEatenFood = false;
-    }
-
-    // update game if snake eats food
-    if (head.x === food.x && head.y === food.y) {
-        hasEatenFood = true;
-        score++; // Increase score after snake eats
-        updateScoreboard(); // update scoreboard
-        food = generateRandomFoodPosition();
-    }
-
-    // check if game over condition is met
-    if (hitBoundaryX || hitBoundaryY || suicide) {
-        clearInterval(gameLoopId);
-        handleGameOver();
-        return;
-    }
- }
+    const currentTime = Date.now();
+    const timeElapsed = currentTime - lastMoveTime;
+    if (timeElapsed >= fixedSpeed) {
+        lastMoveTime = currentTime;
+      
+        // define head of snake and death when snake hits a boundary
+       const headX = snake.body[0].x;
+       const headY = snake.body[0].y;
+       const hitBoundaryX = headX < 0 || headX >= gridSizeX;
+       const hitBoundaryY = headY < 0 || headY >= gridSizeY;
+       const suicide = snake.body.some((segment, index) => index !== 0 && segment.x === headX && segment.y === headY);
+    
+       if (snake.direction !== null) {
+       const head = { ...snake.body[0]};
+       head.x += snake.direction.x;
+       head.y += snake.direction.y;
+       snake.body.unshift(head);
+   
+       if(!hasEatenFood) {
+           snake.body.pop();
+       } else {
+           hasEatenFood = false;
+       }
+   
+       // update game if snake eats food
+       if (head.x === food.x && head.y === food.y) {
+           hasEatenFood = true;
+           score++; // Increase score after snake eats
+           updateScoreboard(); // update scoreboard
+           food = generateRandomFoodPosition();
+       }
+   
+       // check if game over condition is met
+       if (hitBoundaryX || hitBoundaryY || suicide) {
+           clearInterval(gameLoopId);
+           handleGameOver();
+           return;
+       }
+    }}
+ 
  
     // clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
