@@ -6,8 +6,7 @@ let gameOverAlertShown = false
 
 // sound
 const eatSound = new Audio('eat.wav');
-const hitWallSound = new Audio('hit_wall.wav');
-const gameOverSound = new Audio('game_over.wav');
+const hitWallSound = new Audio('hit_wall.mp3');
 
 // play eat sound
 function playEatSound() {
@@ -20,13 +19,6 @@ function playHitWallSound() {
     hitWallSound.currentTime = 0;
     hitWallSound.play();
 }
-
-// play game over sound
-function playGameOverSound() {
-    gameOverSound.currentTime = 0;
-    gameOverSound.play();
-}
-
 // Size of each grid cell 
 const gridCellSize = 20;
 
@@ -166,6 +158,7 @@ function gameLoop() {
        // update game if snake eats food
        if (head.x === food.x && head.y === food.y) {
            hasEatenFood = true;
+           playEatSound();
            score++; // Increase score after snake eats
            updateScoreboard(); // update scoreboard
            food = generateRandomFoodPosition();
@@ -174,6 +167,7 @@ function gameLoop() {
        // check if game over condition is met
        if (hitBoundaryX || hitBoundaryY || suicide) {
            clearInterval(gameLoopId);
+           playHitWallSound();
            handleGameOver();
            return;
        }
