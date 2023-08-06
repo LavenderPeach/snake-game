@@ -84,6 +84,24 @@ function drawSnake() {
         ctx.fillRect(segment.x * gridCellSize, segment.y * gridCellSize, gridCellSize, gridCellSize);
     });
 }
+
+function drawGridLines() {
+    ctx.strokeStyle = "#000";
+    for (let x = 0; x < canvas.width; x += gridCellSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+
+    for (let y = 0; y < canvas.height; y += gridCellSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+}
+
 // Loop interval (ms)
 const snakeSpeed = 6;
 const fixedSpeed = 1 / snakeSpeed * 1000;
@@ -177,9 +195,10 @@ function gameLoop() {
     // clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
 
-    // draw snake + food on canvas
+    // draw snake + food + grid lines on canvas
     drawFood();
     drawSnake();
+    drawGridLines();
     // repeat loop
     requestAnimationFrame(gameLoop);
 }
