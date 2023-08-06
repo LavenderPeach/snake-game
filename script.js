@@ -4,6 +4,29 @@ const restart = document.getElementById('restart-btn');
 let gameStarted = false
 let gameOverAlertShown = false
 
+// sound
+const eatSound = new Audio('eat.wav');
+const hitWallSound = new Audio('hit_wall.wav');
+const gameOverSound = new Audio('game_over.wav');
+
+// play eat sound
+function playEatSound() {
+    eatSound.currentTime = 0;
+    eatSound.play();
+}
+
+// play hit wall sound
+function playHitWallSound() {
+    hitWallSound.currentTime = 0;
+    hitWallSound.play();
+}
+
+// play game over sound
+function playGameOverSound() {
+    gameOverSound.currentTime = 0;
+    gameOverSound.play();
+}
+
 // Size of each grid cell 
 const gridCellSize = 20;
 
