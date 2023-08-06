@@ -41,6 +41,7 @@ let score = 0;
 function updateScoreboard() {
     let score = 0;
 }
+
 // function to reset game upon defeat
 function resetGame() {
     snake.body = [{x: 5, y: 5}];
@@ -144,6 +145,23 @@ function handleGameOver() {
     resetGame();
 }
 
+function showGameOverModal() {
+    const modal = document.getElementById('gameOverModal');
+    const finalScoreElement = document.getElementById('finalScore');
+    finalScoreElement.textContent = score;
+    modal.style.display = 'block';
+}
+
+function hideGameOverModal() {
+    const modal = document.getElementById('gameOverModal');
+    modal.style.display ='none';
+    const restartGameBtn = document.getElementById('restartGameBtn');
+    restartGameBtn.addEventListener('click', () => {
+        hideGameOverModal();
+        resetGame();
+        gameLoopId = setInterval(gameLoop, fixedSpeed);
+    });
+}
 gameLoopId = setInterval(gameLoop, fixedSpeed);
 
 // INSIDE GAME LOOP
@@ -199,6 +217,7 @@ function gameLoop() {
     drawFood();
     drawSnake();
     drawGridLines();
+
     // repeat loop
     requestAnimationFrame(gameLoop);
 }
