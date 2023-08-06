@@ -7,10 +7,17 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>Snake</h1>
         <canvas id="gameCanvas" width="400" height="400"></canvas>
         <div id="scoreboard">Score: 0</div>
         <button id="restart-btn">Restart</button>
+    </div>
+
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <p>You scored <span id='finalScore'></span> points.</p>
+            <button id="restartGameBtn">Play Again</button>
+        </div>
     </div>
     <audio id="eatSound" src="eat.wav"></audio>
     <audio id="hitWallSound" src="hit_wall.mp3"></audio>
