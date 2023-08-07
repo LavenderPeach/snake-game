@@ -3,6 +3,9 @@ const ctx = canvas.getContext('2d');
 const restart = document.getElementById('restart-btn');
 let gameStarted = false
 let gameOverAlertShown = false
+const modal = document.getElementById('gameOverModal');
+const finalScoreElement = document.getElementById('finalScore');
+const restartGameBtn = document.getElementById('restartGameBtn');
 
 // sound
 const eatSound = new Audio('eat.wav');
@@ -16,8 +19,8 @@ function playEatSound() {
 
 // play hit wall sound
 function playHitWallSound() {
-    hitWallSound.currentTime = 0;
     hitWallSound.play();
+    resetGame();
 }
 // Size of each grid cell 
 const gridCellSize = 20;
@@ -39,7 +42,7 @@ let food = generateRandomFoodPosition();
 let hasEatenFood = false;
 let score = 0;
 function updateScoreboard() {
-    let score = 0;
+    let score = 0
 }
 
 // function to reset game upon defeat
@@ -47,13 +50,11 @@ function resetGame() {
     snake.body = [{x: 5, y: 5}];
     snake.direction = {x: 0, y:0};
     hasEatenFood = false;
-    score = 0;
     food = generateRandomFoodPosition();
     clearInterval(gameLoopId);
     document.removeEventListener('keydown', handleKeyPress);
     gameLoopId = setInterval(gameLoop, fixedSpeed);
     document.addEventListener('keydown', handleKeyPress);
-    updateScoreboard();
 }
 
 // Generate random food position
@@ -109,7 +110,6 @@ const fixedSpeed = 1 / snakeSpeed * 1000;
 let lastMoveTime = Date.now();
 let gameLoopId;
 restart.addEventListener ('click', () => {
-    resetGame();
     gameLoopId = setInterval(gameLoop, fixedSpeed);
 });
 
@@ -121,6 +121,7 @@ function handleKeyPress(event){
 
     if (!gameStarted) {
         gameLoopId = setInterval(gameLoop, fixedSpeed);
+        updateScoreboard();
         gameStarted = true
     }
 
@@ -132,36 +133,36 @@ function handleKeyPress(event){
          snake.direction = {x: 1, y: 0};
     } else if (event.key === 'ArrowLeft' && snake.direction.x !== 1) {
        snake.direction = {x: -1, y: 0};
-    }
- }
+    } 
+}
+ 
 document.addEventListener('keydown', handleKeyPress);
 
 // Game over function
 function handleGameOver() {
-    if (!gameOverAlertShown) {
-        alert('You are bad. Like... so bad. You scored ' + (snake.body.length - 1) + ' points. Think you can do any better?');
+    if (!showGameOverModal) {
+       showGameOverModal();
     }
-    document.removeEventListener('keydown', handleKeyPress);
-    resetGame();
 }
 
 function showGameOverModal() {
-    const modal = document.getElementById('gameOverModal');
-    const finalScoreElement = document.getElementById('finalScore');
     finalScoreElement.textContent = score;
     modal.style.display = 'block';
+    document.removeEventListener('keydown', handleKeyPress);
 }
 
 function hideGameOverModal() {
-    const modal = document.getElementById('gameOverModal');
     modal.style.display ='none';
-    const restartGameBtn = document.getElementById('restartGameBtn');
-    restartGameBtn.addEventListener('click', () => {
-        hideGameOverModal();
-        resetGame();
-        gameLoopId = setInterval(gameLoop, fixedSpeed);
-    });
-}
+};
+
+restartGameBtn.addEventListener('click', () => {
+    hideGameOverModal();
+    score = 0;
+    updateScoreboard();
+    resetGame();
+    gameLoopId = setInterval(gameLoop, fixedSpeed);
+});
+
 gameLoopId = setInterval(gameLoop, fixedSpeed);
 
 // INSIDE GAME LOOP
@@ -205,7 +206,7 @@ function gameLoop() {
            clearInterval(gameLoopId);
            playHitWallSound();
            handleGameOver();
-           return;
+           showGameOverModal();
        }
     }}
  
